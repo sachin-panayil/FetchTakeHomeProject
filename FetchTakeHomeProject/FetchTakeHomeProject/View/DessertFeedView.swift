@@ -12,16 +12,12 @@ struct DessertFeedView: View {
   
   var body: some View {
     NavigationView {
-      VStack {
-        List {
-          ForEach(viewModel.desserts, id: \.self) { dessert in
-            NavigationLink(destination: DessertDetailView(viewModel: DessertDetailViewModel(dessert: dessert))) {
-              Text(dessert.strMeal)
-            }
-          }
+      List {
+        ForEach(viewModel.desserts, id: \.self) { dessert in
+          DessertCard(dessert: dessert)
         }
-        .padding()
       }
+      .padding()
       .navigationTitle(Text("List of Desserts"))
     }
     .onAppear(perform: viewModel.fetchDesserts)
@@ -33,9 +29,36 @@ struct DessertFeedView: View {
     }
   }
 }
+
+private struct DessertCard: View {
+  let dessert: DessertResponse.Dessert
   
-  struct DessertFeedView_Previews: PreviewProvider {
-    static var previews: some View {
-      DessertFeedView()
+  var body: some View {
+    NavigationLink(destination: DessertDetailView(viewModel: DessertDetailViewModel(dessert: dessert))) {
+      HStack(spacing: 20) {
+        AsyncImage(
+          url: URL(string: dessert.strMealThumb),
+          content: { image in
+            image.resizable()
+              .aspectRatio(contentMode: .fit)
+              .frame(maxWidth: 40, maxHeight: 40)
+              .clipShape(Circle())
+          },
+          placeholder: {
+            ProgressView()
+              .frame(maxWidth: 40, maxHeight: 40)
+          }
+        )
+        Text(dessert.strMeal.capitalized)
+          .font(.title3)
+        Spacer()
+      }
     }
   }
+}
+
+struct DessertFeedView_Previews: PreviewProvider {
+  static var previews: some View {
+    DessertFeedView()
+  }
+}

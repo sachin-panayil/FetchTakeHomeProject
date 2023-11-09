@@ -36,13 +36,15 @@ struct DessertDetailView: View {
         if viewModel.isLoading {
           ProgressView()
             .controlSize(.large)
+            .scaleEffect(1.5)
         }
       }
     }
+    .navigationBarTitleDisplayMode(.inline)
   }
 }
 
-struct TitleView: View {
+private struct TitleView: View {
   let title: String?
   
   var body: some View {
@@ -51,11 +53,16 @@ struct TitleView: View {
         .padding(.bottom, 1)
         .font(.largeTitle)
         .bold()
+    } else {
+      Text("Loading!")
+        .padding(.bottom, 1)
+        .font(.largeTitle)
+        .bold()
     }
   }
 }
 
-struct SectionHeaderView: View {
+private struct SectionHeaderView: View {
   let text: String
   let isLoading: Bool
   
@@ -67,7 +74,7 @@ struct SectionHeaderView: View {
   }
 }
 
-struct InstructionsView: View {
+private struct InstructionsView: View {
   let instructions: String?
   
   var body: some View {
@@ -79,7 +86,7 @@ struct InstructionsView: View {
   }
 }
 
-struct IngredientsMeasurementsView: View {
+private struct IngredientsMeasurementsView: View {
   let ingredients: [String]?
   let measurements: [String]?
   
@@ -92,6 +99,7 @@ struct IngredientsMeasurementsView: View {
             Spacer()
             Text(measurement)
           }
+          .font(.subheadline)
         }
       }
     }
