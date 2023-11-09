@@ -38,17 +38,24 @@ private struct DessertCard: View {
       HStack(spacing: 20) {
         AsyncImage(
           url: URL(string: dessert.strMealThumb),
-          content: { image in
-            image.resizable()
-              .aspectRatio(contentMode: .fit)
-              .frame(maxWidth: 40, maxHeight: 40)
-              .clipShape(Circle())
-          },
-          placeholder: {
-            ProgressView()
-              .frame(maxWidth: 40, maxHeight: 40)
+          transaction: Transaction(animation: .easeInOut(duration: 0.5))) { phase in
+            switch phase {
+            case .empty:
+              ProgressView()
+                .frame(maxWidth: 40, maxHeight: 40)
+            case .success(let image):
+              image.resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(maxWidth: 40, maxHeight: 40)
+                .clipShape(Circle())
+                .transition(.opacity)
+            case .failure:
+              Image(systemName: "birthday.cake.fill")
+                .frame(maxWidth: 40, maxHeight: 40)
+            @unknown default:
+              EmptyView()
+            }
           }
-        )
         Text(dessert.strMeal.capitalized)
           .font(.title3)
         Spacer()
